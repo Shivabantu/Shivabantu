@@ -1,0 +1,69 @@
+import java.awt.Point;
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.testng.Assert;
+
+public class Fitpeo {
+	public static void main(String[] args) throws InterruptedException {
+		System.getProperty("webdriver.chrome.driver", "C:\\Users\\Admin\\Downloads\\chromedriver-win64 (1)\\chromedriver-win64\\chromedriver.exe");
+		WebDriver driver =new ChromeDriver();
+		// Maximizing Window
+		driver.manage().window().maximize();
+		//Implicity Wait
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+		//Navigating to url
+		driver.get("https://www.fitpeo.com/");
+		//Navigating to Revenue Calculator page
+		driver.findElement(By.xpath("//div[text()='Revenue Calculator']")).click();
+		Thread.sleep(2000);
+		//Adjusting the Slider
+	    WebElement Slider = driver.findElement(By.xpath("(//input[@type='range'])[1]"));
+		System.out.println("Location"+Slider.getLocation());
+		System.out.println("Height"+Slider.getSize());
+		Actions actions = new Actions(driver);
+		actions.dragAndDropBy(Slider, 55,0).build().perform();
+		System.out.println(driver.findElement(By.cssSelector(".MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.MuiInputBase-formControl.MuiInputBase-sizeSmall.css-1kkflqu input[type='number'] ")).getText());
+		//Entering the value 560 in the Text Field
+		WebElement input = driver.findElement(By.cssSelector(".MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.MuiInputBase-formControl.MuiInputBase-sizeSmall.css-1kkflqu input[type='number'] "));
+		input.sendKeys(Keys.CONTROL + "a");
+		input.sendKeys(Keys.DELETE);
+		Thread.sleep(2000);
+		input.sendKeys("560"); 
+		//Validating Slider Value8
+		System.out.println(driver.findElement(By.cssSelector("span[class*='css-sy3s50']")).getAttribute("style"));
+		
+		if (driver.findElement(By.cssSelector("span[class*='css-sy3s50']")).getAttribute("style").contains("left: 28%;"))
+		{
+			System.out.println("Text Field and Slider position is at the value");
+			Assert.assertTrue(true);
+		}
+		else
+		{
+			Assert.assertTrue(false);
+			
+		}
+		
+		//Selecting the CPT Code 
+		driver.findElement(By.cssSelector(".PrivateSwitchBase-input.css-1m9pwf3")).click();
+		driver.findElement(By.xpath("(//input[@type='checkbox'])[2]")).click();
+		driver.findElement(By.xpath("(//input[@type='checkbox'])[3]")).click();
+		driver.findElement(By.xpath("(//input[@type='checkbox'])[8]")).click();
+		//Entering the value 820 in the text field to get the o/p of 110700 value
+		WebElement input1 = driver.findElement(By.cssSelector(".MuiInputBase-root.MuiOutlinedInput-root.MuiInputBase-colorPrimary.MuiInputBase-formControl.MuiInputBase-sizeSmall.css-1kkflqu input[type='number'] "));
+		input1.sendKeys(Keys.CONTROL + "a");
+		input1.sendKeys(Keys.DELETE);
+		Thread.sleep(2000);
+		input1.sendKeys("820");
+		Thread.sleep(2000);
+		//Validating Total reimbursement
+		System.out.println(driver.findElement(By.cssSelector("p:nth-child(4) p:nth-child(1)")).getText());
+		Assert.assertEquals(driver.findElement(By.cssSelector("p:nth-child(4) p:nth-child(1)")).getText(), "$110700");
+	}
+
+}
